@@ -39,19 +39,27 @@ namespace Database.Repository
         {
             var budget = _dbContext.Budgets.FirstOrDefault(x => x.Id == budgetId);
 
-            //check null
+            if (budget is null)
+                throw new Exception("Budget not found");
 
             _dbContext.Budgets.Remove(budget);
+            _dbContext.SaveChanges();
         }
 
         public BudgetDto Get(int budgetId)
         {
-            throw new NotImplementedException();
+            var budget = _dbContext.Budgets.FirstOrDefault(x => x.Id == budgetId);
+
+            if (budget is null)
+                throw new Exception("Budget not found");
+
+            return _mapper.Map<BudgetDto>(budget);
         }
 
         public List<BudgetListDto> GetAll()
         {
-            throw new NotImplementedException();
+            var budgets = _dbContext.Budgets.ToList();
+            return _mapper.Map<List<BudgetListDto>>(budgets);
         }
     }
 }
