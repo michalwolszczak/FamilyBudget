@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
-using Database.Data;
-using Database.Data.Entities;
-using Database.Models;
-namespace Database.Repository
+using API.Data;
+using API.Data.Entities;
+using API.Models;
+using API.Exceptions;
+
+namespace API.Repository
 {
     public interface IBudgetRepository
     {
@@ -17,12 +19,10 @@ namespace Database.Repository
     {
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _dbContext;
-        private readonly Configuration _config;
-        public BudgetRepository()
+        public BudgetRepository(ApplicationDbContext dbContext, IMapper mapper)
         {
-            _dbContext = new ApplicationDbContext();
-            _config = Configuration.GetInstance();
-            _mapper = _config.MapperConfiguration.CreateMapper();
+            _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public int Create(BudgetDto dto)
@@ -40,7 +40,7 @@ namespace Database.Repository
             var budget = _dbContext.Budgets.FirstOrDefault(x => x.Id == budgetId);
 
             if (budget is null)
-                throw new Exception("Budget not found");
+                throw new NotFoundException("Budget not found");
 
             _dbContext.Budgets.Remove(budget);
             _dbContext.SaveChanges();
@@ -51,7 +51,7 @@ namespace Database.Repository
             var budget = _dbContext.Budgets.FirstOrDefault(x => x.Id == budgetId);
 
             if (budget is null)
-                throw new Exception("Budget not found");
+                throw new NotFoundException("Budget not found");
 
             return _mapper.Map<BudgetDto>(budget);
         }
