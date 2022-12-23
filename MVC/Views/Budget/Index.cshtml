@@ -1,0 +1,43 @@
+﻿@model List<Budget>
+
+@*        public int Id { get; set; }
+        public decimal Limit { get; set; }
+        public decimal Balance { get; set; }
+        public List<Income> Incomes { get; set; }
+        public List<Expense> Expenses { get; set; }
+*@
+
+<div class="container p-3">
+
+    <div class="row pt-4">
+        <div class="col-6">
+            <h1>Budgets</h1>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12 table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Limit</th>
+                        <th scope="col">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var budget in Model)
+                    {
+                        <tr>
+                            <td>
+                                @budget.Limit
+                            </td>
+                            <td>
+                                @budget.Balance
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

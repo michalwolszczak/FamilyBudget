@@ -6,5 +6,6 @@
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public List<Budget> Budgets { get; set; }
+        public List<BudgetUser> BudgetUsers { get; set; }
     }
 }

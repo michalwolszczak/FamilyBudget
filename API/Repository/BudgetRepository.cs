@@ -8,7 +8,7 @@ namespace API.Repository
 {
     public interface IBudgetRepository
     {
-        List<BudgetListDto> GetAll();
+        List<Budget> GetAll();
         BudgetDto Get(int budgetId);
         int Create(BudgetDto dto);
         void Delete(int budgetId);
@@ -56,10 +56,10 @@ namespace API.Repository
             return _mapper.Map<BudgetDto>(budget);
         }
 
-        public List<BudgetListDto> GetAll()
+        public List<Budget> GetAll()
         {
             var budgets = _dbContext.Budgets.ToList();
-            return _mapper.Map<List<BudgetListDto>>(budgets);
+            return _mapper.Map<List<Budget>>(budgets);
         }
     }
 }

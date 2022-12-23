@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221221190912_Init database")]
-    partial class Initdatabase
+    [Migration("20221222171338_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,17 +36,32 @@ namespace API.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Limit")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("UserId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Budgets");
+                });
+
+            modelBuilder.Entity("API.Data.Entities.BudgetUser", b =>
+                {
+                    b.Property<int>("BudgetId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BudgetId", "UserId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Budgets");
+                    b.ToTable("BudgetUser");
                 });
 
             modelBuilder.Entity("API.Data.Entities.Expense", b =>
@@ -122,9 +137,32 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Data.Entities.Budget", b =>
                 {
-                    b.HasOne("API.Data.Entities.User", null)
+                    b.HasOne("API.Data.Entities.User", "Creator")
                         .WithMany("Budgets")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("API.Data.Entities.BudgetUser", b =>
+                {
+                    b.HasOne("API.Data.Entities.Budget", "Budget")
+                        .WithMany("BudgetUsers")
+                        .HasForeignKey("BudgetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("API.Data.Entities.User", "User")
+                        .WithMany("BudgetUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Budget");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("API.Data.Entities.Expense", b =>
@@ -143,6 +181,8 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Data.Entities.Budget", b =>
                 {
+                    b.Navigation("BudgetUsers");
+
                     b.Navigation("Expenses");
 
                     b.Navigation("Incomes");
@@ -150,6 +190,8 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Data.Entities.User", b =>
                 {
+                    b.Navigation("BudgetUsers");
+
                     b.Navigation("Budgets");
                 });
 #pragma warning restore 612, 618

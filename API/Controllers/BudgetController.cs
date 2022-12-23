@@ -1,11 +1,13 @@
 ﻿using API.Models;
 using API.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("/api/budget")]    
+    [Route("/api/budgets")]    
     [ApiController]
+    [Authorize]
     public class BudgetController : Controller
     {
         private readonly IBudgetRepository _budgetRepository;

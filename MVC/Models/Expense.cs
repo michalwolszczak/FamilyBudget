@@ -1,10 +1,10 @@
-﻿namespace API.Data.Entities
+﻿namespace MVC.Models
 {
-    public class Income
+    public class Expense
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Amount { get; set; }
-        public IncomeCategory IncomeCategory { get; set; }
+
     }
 }
